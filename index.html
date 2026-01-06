@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquandRust | Главная</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2bbacd; /* Основной цвет Rust */
+            --dark-bg: #101010; /* Очень темный фон */
+            --light-dark-bg: #1a1a1a; /* Чуть светлее */
+            --text-color: #e0e0e0; /* Светлый текст */
+            --sub-text-color: #a0a0a0; /* Более тусклый текст */
+            --border-color: #333; /* Цвет границ */
+            --accent-green: #4caf50; /* Зеленый для онлайна */
+            --danger-red: #e74c3c; /* Красный для оффлайна */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Общие стили для секций */
+        section {
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--sub-text-color);
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Шапка */
+        header {
+            background-color: rgba(0, 0, 0, 0.95);
+            padding: 15px 20px;
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center; /* Центрируем навигацию */
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: color 0.3s, border-bottom 0.3s;
+            letter-spacing: 1px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        /* Главный геройский блок */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://avatars.mds.yandex.net/i?id=1b2430c406dcabfb86271a687d5577c1_l-4881188-images-thumbs&n=13') center center / cover no-repeat;
+            color: white;
+            padding: 150px 20px;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+
+        .hero-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 5.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            max-width: 900px;
+            font-weight: 300;
+        }
+
+        .ip-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        .ip-box {
+            background: rgba(30, 30, 30, 0.7);
+            padding: 20px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .ip-box:hover {
+            background: rgba(40, 40, 40, 0.8);
+            box-shadow: 0 0 25px rgba(205, 65, 43, 0.7);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .ip-box i {
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+
+        .copy-toast {
+            visibility: hidden;
+            background-color: var(--accent-green);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 12px 25px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.4s, visibility 0.4s;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .copy-toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Секция "О нас" */
+        .about {
+            background-color: var(--light-dark-bg);
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+        }
+
+        .about-text h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .about-image {
+            flex: 0 0 400px;
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+
+        /* Секция "Особенности" */
+        .features-section {
+            background-color: var(--dark-bg);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: var(--light-dark-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background-color: #252525;
+        }
+
+        .feature-card i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: var(--sub-text-color);
+        }
+
+        /* Секция "Статистика" */
+        .stats-section {
+            background-color: var(--light-dark-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            background-color: var(--dark-bg);
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            min-width: 280px;
+        }
+
+        .stat-item h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            color: var(--sub-text-color);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.8rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .online-status { color: var(--accent-green); }
+        .offline-status { color: var(--danger-red); }
+        .loading-status { color: var(--sub-text-color); }
+
+
+        /* Секция "Сообщество" */
+        .community {
+            background-color: var(--dark-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .social-links {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .social-links a {
+            font-size: 4rem;
+            color: var(--text-color);
+            transition: transform 0.3s ease, color 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-10px) scale(1.1);
+        }
+
+        .fa-youtube:hover { color: #ff0000; }
+        .fa-discord:hover { color: #7289da; }
+        .fa-telegram:hover { color: #0088cc; }
+
+        /* Футер */
+        footer {
+            background-color: var(--light-dark-bg);
+            color: var(--sub-text-color);
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        footer small {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .hero-title { font-size: 4rem; }
+            .hero-subtitle { font-size: 1.5rem; }
+            .ip-box { font-size: 1.2rem; padding: 15px 30px; }
+            .ip-box i { font-size: 1.5rem; }
+            .section-title { font-size: 3rem; }
+            .about-content { flex-direction: column; text-align: center; }
+            .about-image { max-width: 500px; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .section-title { font-size: 2.5rem; }
+            .section-subtitle { font-size: 1rem; margin-bottom: 40px; }
+            .ip-box { font-size: 1rem; padding: 12px 25px; }
+            .ip-box i { font-size: 1.2rem; margin-right: 10px; }
+            .about-text h3 { font-size: 1.8rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .stats-grid { flex-direction: column; }
+            .stat-item { min-width: unset; width: 100%; max-width: 400px; margin: 0 auto;}
+            .social-links a { font-size: 3rem; margin: 0 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 2.2rem; letter-spacing: 2px; }
+            .hero-subtitle { font-size: 1rem; margin-bottom: 30px; }
+            nav a { margin: 0 10px; font-size: 0.9rem; }
+            .section-title { font-size: 2rem; letter-spacing: 1px; }
+            .ip-box { font-size: 0.9rem; padding: 10px 20px; }
+            .ip-box i { font-size: 1rem; }
+            .copy-toast { padding: 8px 15px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="index.html">Главная</a>
+        <a href="shop.html">Магазин</a>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <h1 class="hero-title">Aquand Rust</h1>
+        <p class="hero-subtitle">
+            Открой для себя мир выживания, где каждый день — это новое приключение. <br>
+            Присоединяйся к нам и стань частью дружного сообщества!
+        </p>
+        <div class="ip-container">
+            <div id="copyToast" class="copy-toast">✓ Адрес скопирован!</div>
+            <div class="ip-box" onclick="copyIp()">
+                <i class="fas fa-play-circle"></i>
+                connect aquandrust.veroid.fun
+            </div>
+        </div>
+        <p style="font-size: 0.9rem; margin-top: 15px; color: var(--sub-text-color);">
+            Нажми, чтобы скопировать IP и подключиться
+        </p>
+    </section>
+
+    <section class="about">
+        <h2 class="section-title">О Нас</h2>
+        <p class="section-subtitle">
+            AquandRust — это уникальный сервер Rust, созданный для тех, кто ценит комфортное развитие и честную игру.
+            Мы предлагаем сбалансированный геймплей с увеличенными рейтами, чтобы вы могли наслаждаться каждым моментом.
+        </p>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Твое идеальное выживание начинается здесь</h3>
+                <p>
+                    Забудь о долгих часах монотонного фарма! На нашем сервере ты найдешь увеличенную добычу ресурсов и ускоренную плавку,
+                    что позволит тебе быстрее строить базу, крафтить снаряжение и участвовать в PvP. Мы создали атмосферу,
+                    где каждый игрок, будь то новичок или ветеран, сможет найти свое место и проявить себя.
+                </p>
+                <p>
+                    Наша команда администрации всегда готова помочь и поддерживать порядок, обеспечивая стабильную и приятную игру.
+                    Присоединяйся к AquandRust и начни свою легенду в мире Rust уже сегодня!
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="https://yt3.googleusercontent.com/ytc/AIdro_lFeka8H-EDu8Bq3m36MgxHuEBsBm-r0xpv85jgOvLOFg=s900-c-k-c0x00ffffff-no-rj" alt="База на Rust">
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h2 class="section-title">Наши Особенности</h2>
+        <p class="section-subtitle">
+            Мы тщательно продумали каждый аспект игры, чтобы ваше время на сервере было максимально продуктивным и увлекательным.
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-gem"></i>
+                <h3>Ресурсы x2</h3>
+                <p>Увеличенный дроп ресурсов позволяет быстрее развиваться и фокусироваться на экшене.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-fire-alt"></i>
+                <h3>Быстрая плавка</h3>
+                <p>Экономьте время с ускоренной переработкой в печах и нефтеперерабатывающих заводах.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-box"></i>
+                <h3>Улучшенный лут</h3>
+                <p>Находите более ценные предметы и компоненты, исследуя мир.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Стабильный Онлайн</h3>
+                <p>Комфортный геймплей без задержек и лагов для всех игроков.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-headset"></i>
+                <h3>Администрация 24/7</h3>
+                <p>Оперативная поддержка и справедливый контроль за соблюдением правил.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Дружелюбное Сообщество</h3>
+                <p>Присоединяйтесь к игрокам, которые ценят командную работу и взаимоуважение.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <h2 class="section-title">Актуальная Статистика</h2>
+        <p class="section-subtitle">
+            Следите за состоянием сервера в реальном времени.
+        </p>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>Игроков Онлайн</h3>
+                <div id="server-online" class="stat-value loading-status">Загрузка...</div>
+            </div>
+            <div class="stat-item">
+                <h3>Поддержка</h3>
+                <div class="stat-value" style="font-size: 2rem;">
+                    <i class="fas fa-life-ring" style="color: var(--primary); font-size: 1.5rem; margin-right: 10px;"></i>
+                    Отвечаем 24/7
+                </div>
+                <a href="mailto:phant0mblitzpr0game@gmail.com" style="color: var(--primary); text-decoration: none; font-size: 0.95rem; margin-top: 10px; display: block;">
+                    phant0mblitzpr0game@gmail.com
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="community">
+        <h2 class="section-title">Присоединяйся к Сообществу</h2>
+        <p class="section-subtitle">
+            Будь в курсе всех новостей, участвуй в обсуждениях и находи новых друзей!
+        </p>
+        <div class="social-links">
+            <a href="https://www.youtube.com/@ALLY_4x4" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://discord.gg/eKNw6um9Nb" title="Discord" target="_blank"><i class="fab fa-discord"></i></a>
+            <a href="https://t.me/asetmc" title="Telegram" target="_blank"><i class="fab fa-telegram"></i></a>
+        </div>
+    </section>
+</main>
+
+<footer>
+    &copy; 2024 AquandRust Project. Все права защищены. <br>
+    <small>Разработано для сообщества Rust. Мы не связаны с Facepunch Studios.</small>
+</footer>
+
+<script>
+    // 1. Логика копирования IP
+    function copyIp() {
+        const ipAddress = "connect aquandrust.veroid.fun";
+        navigator.clipboard.writeText(ipAddress).then(() => {
+            const toast = document.getElementById("copyToast");
+            toast.className = "copy-toast show";
+            setTimeout(() => { 
+                toast.className = toast.className.replace("show", ""); 
+            }, 2500);
+        });
+    }
+
+    // 2. Логика получения реального онлайна через BattleMetrics API
+    async function fetchServerStatus() {
+        const SERVER_ID = "37175897"; // Твой актуальный ID сервера AquandRust
+        const statusDisplay = document.getElementById('server-online');
+
+        try {
+            const response = await fetch(`https://api.battlemetrics.com/servers/${SERVER_ID}`);
+            if (!response.ok) throw new Error('Ошибка сети при получении данных BattleMetrics');
+            
+            const result = await response.json();
+            const attr = result.data.attributes;
+            
+            const currentPlayers = attr.players;
+            const maxPlayers = attr.maxPlayers;
+            const status = attr.status; // 'online' или 'offline'
+
+            if (status === "online") {
+                statusDisplay.innerHTML = `${currentPlayers} / ${maxPlayers}`;
+                statusDisplay.classList.remove('loading-status', 'offline-status');
+                statusDisplay.classList.add('online-status');
+            } else {
+                statusDisplay.innerHTML = `Offline`;
+                statusDisplay.classList.remove('loading-status', 'online-status');
+                statusDisplay.classList.add('offline-status');
+            }
+        } catch (error) {
+            console.error("Ошибка при получении данных:", error);
+            statusDisplay.innerText = "Ошибка загрузки";
+            statusDisplay.classList.remove('online-status', 'offline-status');
+            statusDisplay.classList.add('loading-status');
+        }
+    }
+
+    // Вызываем функцию при загрузке
+    fetchServerStatus();
+    // Обновляем данные каждые 60 секунд (1 минута)
+    setInterval(fetchServerStatus, 60000);
+</script>
+
+</body>
+</html>
